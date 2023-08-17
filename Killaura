@@ -1,0 +1,106 @@
+local User = "kaizilla1128"
+
+local EnableMessage = "/on"
+
+local DisableMessage = "/off"
+
+local Radius = 30
+
+
+local Exploiter = nil
+
+local Enabled = false
+
+
+for _, Player in pairs(PlayerService.getPlayers()) do
+
+    if Player.name == User then
+
+        Exploiter = Player
+
+    end
+
+end
+
+
+task.spawn(function()
+
+    while task.wait() do
+
+        if (Enabled) then
+
+            for _, Player in pairs(PlayerService.getPlayers()) do
+
+                if Player.name ~= User then
+
+                    local Entity = Player:getEntity()
+
+       
+
+                    if (Entity) and (Entity:isAlive()) then
+
+                        local PlayerPosition = Entity:getPosition()
+
+                        local ExploiterPosition = Exploiter:getEntity():getPosition()
+
+       
+
+                        if (not ExploiterPosition) then
+
+                            continue
+
+                        end
+
+       
+
+                        if (PlayerPosition - ExploiterPosition).magnitude < Radius then
+
+                            local ExploiterTeam = TeamService.getTeam(Exploiter)
+
+                            local PlayerTeam = TeamService.getTeam(Player)
+
+   
+
+                            if (ExploiterTeam ~= PlayerTeam) then
+
+                                CombatService.damage(Entity, 45)
+
+                            end
+
+                        end
+
+                    end
+
+                end
+
+            end
+
+        end
+
+    end
+
+end)
+
+
+Events.PlayerChatted(function(event)
+
+    local Player = event.player
+
+    local Message = event.message
+
+
+    if (Player.name == Exploiter.name) then
+
+        if (string.lower(Message) == string.lower(EnableMessage)) then
+
+            Enabled = true
+
+        elseif (string.lower(Message) == string.lower(DisableMessage)) then
+
+            Enabled = false
+
+        end
+
+    end
+
+end)
