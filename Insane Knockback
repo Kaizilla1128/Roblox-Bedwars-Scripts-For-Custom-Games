@@ -1,0 +1,7 @@
+Events.EntityDamage(function(event)
+
+            event.knockback.horizontal = 5
+
+            event.knockback.vertical = 5
+
+        end)
