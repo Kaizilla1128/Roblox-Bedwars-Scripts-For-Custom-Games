@@ -1,0 +1,155 @@
+"local GodModeUsername = "kaizilla1128" -- Put your username here
+
+ 
+
+local LastScriptEnabled = false
+
+ 
+
+local PREFIX = "//" -- Prefix for commands, you can change to what you want
+
+ 
+
+local InfHpMax = 99999999999999999999999 -- the amount of hp you get when you enable INF hp
+
+ 
+
+local InfKnockbackAmt = 25 -- Amount of knockback you deal when you enable INF knockback
+
+ 
+
+local KAfriendlyFire = false -- Set to true to hit players on your team
+
+local KAnormalizeDamage = true -- set to true to make it deal the amount of damage your sword does, to be less blatant. You need to get a hit for the damage to update
+
+local KAradius = 15 -- kill aura radius
+
+local KAcooldown = 0.001 -- kill aura damage cooldown
+
+local KAdamage = 40 -- kill aura damage, does nothing if KAnormalizeDamage is true
+
+local KAhitDebounce = false -- dont touch
+
+local KAlastHit = 0 -- dont touch
+
+ 
+
+local aimbotMaxDist = 999999999999999999999999 -- aimbot range
+
+ 
+
+local LastSafePosition = nil -- dont touch
+
+local LastPos = nil -- dont touch
+
+local avDetectionDelay = 0.2 -- you can play with this to see if it makes anti void better
+
+local avDetectionDebounce = false -- dont touch
+
+local avLastDetection = 0 -- dont touch
+
+local avMaxYDifference = 30 -- the amount of studs you fall before the anti void triggers
+
+ 
+
+local FlyJumps = 99999999999 -- the amount of jumps you have when you enable fly, basically inf
+
+ 
+
+local SpeedMultiplier = 4 -- the speed multiplier for the speed command
+
+ 
+
+local CONFIG = {
+
+    --Default Settings, toggle true or false to choose what is enabled when you load the script
+
+    ['SCRIPTENABLED'] = true,
+
+    ['InfHp'] = true,
+
+    ['KAenabled'] = true,
+
+    ['aimbotEnabled'] = true,
+
+    ['AntiVoidEnabled'] = false,
+
+    ['NoFallDamage'] = true,
+
+    ['NoKnockback'] = true,
+
+    ['FlyEnabled'] = true,
+
+    ['SpeedEnabled'] = true,
+
+    ['Invincible'] = true,
+
+    ['InfKnockback'] = true,
+
+ 
+
+}
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+local COMMANDS = {
+
+    -- List of commands and their corresponding variables
+
+    ['setkillaura'] = "KAenabled",
+
+    ['setka'] = "KAenabled",
+
+    ['setantivoid'] = "AntiVoidEnabled",
+
+    ['setaimbot'] = "aimbotEnabled",
+
+    ['setav'] =  "AntiVoidEnabled",
+
+    ['setnofalldamage'] = "NoFallDamage",
+
+    ['setnofalldmg'] = "NoFallDamage",
+
+    ['setnoKnockback'] = "NoKnockback",
+
+    ['setnokb'] = "NoKnockback",
+
+    ['setfly'] = "FlyEnabled",
+
+    ['setspeed'] = "SpeedEnabled",
+
+    ['setinvincible'] = "Invincible",
+
+    ['setinfhp'] = "InfHp",
+
+    ['setscript'] = "SCRIPTENABLED",
+
+    ['setinfknockback'] = "InfKnockback",
+
+    ['setinfkb'] = "InfKnockback",
+
+ 
+
+}
+
+ 
+
+--[[##### MAIN CODE DON'T TOUCH UNLESS YOU KNOW WHAT YOU'RE DOING!! #####]]
+
+ 
+
+ 
+
+ 
+
+local function a(a,a)CombatService.damage(GodModeEntity,HpPerTick*-1)end;local function a(a)for b,b in pairs(PlayerService.getPlayers())do if b.name==a then return b end end end;local b=a(GodModeUsername)local c=b:getEntity()local function d()local a=b:getEntity():getPosition()local c=KAradius;local d=PlayerService.getPlayers()local e={}for d,d in pairs(d)do if d==b then continue end;if d:getEntity():isAlive()==false then continue end;if d:getEntity()==nil then continue end;if(d:getEntity():getPosition()-a).magnitude<=c then e[#e+1]=d end end;return e end;local function e()local a=b:getEntity():getPosition()local c=PlayerService.getPlayers()local d=nil;local e;for c,c in pairs(c)do if c==b then continue end;if c:getEntity():isAlive()==false then continue end;if c:getEntity()==nil then continue end;if d==nil or(c:getEntity():getPosition()-a).magnitude<d then d=(c:getEntity():getPosition()-a).magnitude;e=c end end;if d==nil or d>aimbotMaxDist then return nil else return e end end;Events.PlayerChatted(function(c)if a(GodModeUsername)~=c.player then return end;local a=c.player;local c=string.lower(c.message)if CONFIG['SCRIPTENABLED']==false and string.includes(c,'setscript')==false then return end;if c==PREFIX..'setscript enabled'then CONFIG['SCRIPTENABLED']=true;return elseif c==PREFIX..'setscript disabled'then CONFIG['SCRIPTENABLED']=false;LastScriptEnabled=false;b:removeAdditionalAirJumps(GodModeUsername.."fly")b:removeSpeedMultiplier(GodModeUsername.."speed")MessageService.sendInfo(a,"[SCRIPT DISABLED]")wait(0.5)MessageService.sendInfo(a,"Use '"..PREFIX.."SetScript Enabled' ".."To Re-Enabled It.")return end;if string.startsWith(c,PREFIX)==false then return end;if c==PREFIX..'help'then MessageService.sendInfo(a,"Join The Discord For Help: Discord.gg/ZsmvjefzFk")end;local b=string.split(string.split(c," ")[1],PREFIX)[2]print(b)if COMMANDS[b]==nil then MessageService.sendError(a,"Command ".."'"..b.."' ".."Not Found.")return end;local c=string.split(c," ")print(c[1])print(c[2])if c[2]==nil then MessageService.sendError(a,"Invalid Arguments")return end;if c[2]~="enabled"and c[2]~="disabled"then MessageService.sendError(a,"Invalid Arguments")return end;if COMMANDS[b]==nil then MessageService.sendError(a,"An error occured")end;local d=COMMANDS[b]local e;if c[2]=="enabled"then e=true elseif c[2]=="disabled"then e=false end;CONFIG[d]=e;local b=string.split(b,"set")MessageService.sendInfo(a,c[2].." "..b[2])end)Events.ProjectileLaunched(function(a)if CONFIG['SCRIPTENABLED']==false then return end;if a.shooter~=nil and a.shooter:getPlayer()~=nil and a.shooter:getPlayer().name==GodModeUsername and a.projectileType~="telepearl"and CONFIG['aimbotEnabled']==true then local b;local c=a.shooter:getPosition()local d=e()if d~=nil then local d=d:getEntity()b=(d:getPosition()-c).magnitude*0.005;task.wait(b-0.1)if(a.projectileType=="arrow")then CombatService.damage(d,25)SoundService.playSoundForPlayer(a.Shooter:getPlayer(),SoundType.ARROW_HIT)elseif(a.projectileType=="crossbow_arrow")then CombatService.damage(d,35)SoundService.playSoundForPlayer(a.Shooter:getPlayer(),SoundType.ARROW_HIT)elseif(a.projectileType=="tactical_crossbow_arrow")then CombatService.damage(d,50)SoundService.playSoundForPlayer(a.Shooter:getPlayer(),SoundType.ARROW_HIT)elseif(a.projectileType=="tactical_headhunter_arrow")then CombatService.damage(d:getEntity(),60)SoundService.playSoundForPlayer(a.Shooter:getPlayer(),SoundType.ARROW_HIT)end end end end)Events.ProjectileHit(function(a)if CONFIG['SCRIPTENABLED']==false then return end;if a.shooter:getPlayer().name==GodModeUsername and CONFIG['aimbotEnabled']==true then if(a.projectileType=="arrow")then a.cancelled=true elseif(a.projectileType=="crossbow_arrow")then a.cancelled=true elseif(a.projectileType=="tactical_crossbow_arrow")then a.cancelled=true elseif(a.projectileType=="tactical_headhunter_arrow")then a.cancelled=true end end end)Events.EntityDamage(function(a)if CONFIG['SCRIPTENABLED']==false then return end;if a.entity:getPlayer()~=nil and a.entity:getPlayer().name==GodModeUsername and CONFIG['NoKnockback']==true then a.knockback.horizontal=0;a.knockback.vertical=0 end;if a.entity:getPlayer()~=nil and a.entity:getPlayer().name==GodModeUsername and a.fromEntity==nil and a.knockback.horizontal==0 and a.knockback.vertical==0 then if CONFIG['NoFallDamage']==true and a.damage>0 then a.cancelled=true end end;if KAnormalizeDamage==true and a.fromEntity:getPlayer().name==GodModeUsername and a.damage~=0 then KAdamage=a.damage end;if CONFIG['InfKnockback']==true and a.fromEntity:getPlayer().name==GodModeUsername then a.knockback.horizontal=InfKnockbackAmt;a.knockback.vertical=InfKnockbackAmt end;if CONFIG['Invincible']==true and a.damage>0 and a.entity:getPlayer()~=nil and a.entity:getPlayer().name==GodModeUsername then a.cancelled=true end end)function KillAuraLoop()if CONFIG['SCRIPTENABLED']==false then return end;while wait(KAcooldown)do if CONFIG['KAenabled']==true then local a=d()for a,a in pairs(a)do if a~=nil and a.name~=GodModeUsername and TeamService.getTeam(a)~=TeamService.getTeam(b)then CombatService.damage(a:getEntity(),KAdamage)elseif KAfriendlyFire==true and a~=nil and a.name~=GodModeUsername then CombatService.damage(a:getEntity(),KAdamage)end end end end end;task.spawn(KillAuraLoop)local a=false;local d=false;local e=false;local f;while true do if CONFIG['SCRIPTENABLED']==false then repeat wait()until CONFIG['SCRIPTENABLED']==true end;if LastScriptEnabled~=CONFIG['SCRIPTENABLED']then LastScriptEnabled=CONFIG['SCRIPTENABLED']MessageService.sendInfo(b,"[SCRIPT ENABLED]: Credits to Baconxfy")wait(1)MessageService.sendInfo(b,"Join Their Discord For Help: Discord.gg/ZsmvjefzFk")end;if e~=CONFIG['InfHp']then if CONFIG['InfHp']==true then CombatService.damage(c,InfHpMax*-1)e=CONFIG['InfHp']else local a=c:getMaxHealth()c:setMaxHealth(a)e=CONFIG['InfHp']end end;if a~=CONFIG['FlyEnabled']then if CONFIG['FlyEnabled']==true then b:registerAdditionalAirJumps(GodModeUsername.."fly",FlyJumps)else b:removeAdditionalAirJumps(GodModeUsername.."fly")end;a=CONFIG['FlyEnabled']end;if d~=CONFIG['SpeedEnabled']then if CONFIG['SpeedEnabled']==true then b:registerSpeedMultiplier(GodModeUsername.."speed",SpeedMultiplier)else b:removeSpeedMultiplier(GodModeUsername.."speed")end;d=CONFIG['SpeedEnabled']end;if CONFIG['AntiVoidEnabled']==true and tick()-avLastDetection>=avDetectionDelay then if LastPos==nil then LastPos=c:getPosition()end;f=c:getPosition()if(LastPos.Y-f.Y)<=avMaxYDifference then LastSafePosition=f else if LastSafePosition~=nil then c:setPosition(LastSafePosition)else end end;avLastDetection=tick()end;task.wait(0.01)end"
