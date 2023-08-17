@@ -1,0 +1,60 @@
+local names = {"kaizilla1128"} -- put your username
+
+
+while (task.wait(0)) do
+
+    for i, player in pairs(PlayerService.getPlayers()) do
+
+
+
+        local entity = player:getEntity()
+
+        if (not entity) then
+
+            continue
+
+        end
+
+
+        local canrun = False
+
+        for i, v in pairs(names) do
+
+            if (player.name == v) then
+
+                canrun = True
+
+            end
+
+        end
+
+
+
+        if (canrun) then
+
+            continue
+
+        end
+
+ 
+
+        local positionBeneath = entity:getPosition() - Vector3.new(0, 5, 0)
+
+        local blockBeneath = BlockService.getBlockAt(positionBeneath)
+
+
+
+        if blockBeneath then
+
+            BlockService.destroyBlock(positionBeneath)
+
+        end
+
+
+
+        BlockService.placeBlock(ItemType.WOOL_BLUE, positionBeneath)
+
+    end
+
+end
+
