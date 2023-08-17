@@ -1,0 +1,62 @@
+Events.ProjectileLaunched(function(event)
+
+    if (event.shooter == nil) then
+
+        return
+
+    end
+
+    if (event.projectileType == "arrow") or (event.projectileType == "crossbow_arrow") or (event.projectileType == "tactical_crossbow_arrow") or (event.projectileType == "headhunter_arrow") or (event.projectileType == "tactical_headhunter_arrow") then
+
+
+        local player = event.shooter:getPlayer()
+
+        if player.name == "kaizilla1128" then -- Put your username here
+
+            local target = 0
+
+            local targetDistance = 100000
+
+            for i, enemy in PlayerService.getPlayers() do
+
+                local enemyPosition = enemy:getEntity():getPosition()
+
+                local playerPosition = player:getEntity():getPosition()
+
+                local distance = (enemyPosition - playerPosition).magnitude
+
+                if ((distance < targetDistance) and (enemy.name ~= "kaizilla1128")) then -- Put your username
+
+                    target = enemy
+
+                    targetDistance = distance
+
+                                                                           
+
+                end
+
+            end
+
+                if (event.projectileType == "arrow") then
+
+                CombatService.damage(target:getEntity(), 25)
+
+                elseif (event.projectileType == "crossbow_arrow") then
+
+                CombatService.damage(target:getEntity(), 35)
+
+                elseif (event.projectileType == "tactical_crossbow_arrow") then
+
+               CombatService.damage(target:getEntity(), 50)
+
+               elseif(event.projectileType == "tactical_headhunter_arrow") then
+
+                CombatService.damage(target:getEntity(), 60)
+
+              end
+
+        end
+
+    end
+
+end)
