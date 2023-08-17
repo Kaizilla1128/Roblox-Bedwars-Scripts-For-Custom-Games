@@ -1,0 +1,71 @@
+-- Gamemode: Tag
+
+-- Hitting players makes them join your team.
+
+-- Once everyone is on the same team the game ends.
+
+Events.EntityDamage(function(event)
+
+    -- Can only tag players
+
+    if not event.entity:getPlayer() then
+
+        return
+
+    end
+
+    -- Make sure the tagger is a player
+
+    if (not event.fromEntity or not event.fromEntity:getPlayer()) then
+
+        return
+
+    end
+
+   
+
+    local attackerTeam = TeamService.getTeam(event.fromEntity:getPlayer())
+
+    TeamService.setTeam(event.entity:getPlayer(), attackerTeam)
+
+   
+
+    -- Check that all teams besides the attackerTeam are empty
+
+    -- If so give win to attacker team
+
+    local gameOver = true
+
+    for i, team in ipairs(TeamService.getAllTeams()) do
+
+        if (team == attackerTeam) then
+
+            continue
+
+        end
+
+       
+
+        -- If another team has players the game is not over
+
+        if #team:getInGamePlayers() > 0 then
+
+            gameOver = false
+
+            break
+
+        end
+
+    end
+
+   
+
+    -- Give out win
+
+    if gameOver then
+
+        MatchService.endMatch(attackerTeam)
+
+    end
+
+end)
